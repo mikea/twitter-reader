@@ -3,6 +3,6 @@
     <application>twitter-reader</application>
     <version>2</version>
     <sessions-enabled>true</sessions-enabled>
-    <async-session-persistence enabled="true" />
+    <async-session-persistence enabled="true" queue-name="default"/>
 
 </appengine-web-app>
