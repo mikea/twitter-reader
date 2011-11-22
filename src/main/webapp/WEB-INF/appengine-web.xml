@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>twitter-reader</application>
+    <version>2</version>
+    <sessions-enabled>true</sessions-enabled>
+    <async-session-persistence enabled="true" />
+
+</appengine-web-app>
