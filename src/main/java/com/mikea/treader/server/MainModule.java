@@ -9,9 +9,12 @@ import com.mikea.treader.model.User;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 
+import java.util.logging.Logger;
+
 /**
  */
 public class MainModule extends AbstractModule {
+    private static final Logger LOG = Logger.getLogger(MainModule.class.getName());
     @Override
     protected void configure() {
         ObjectifyService.register(User.class);
@@ -23,6 +26,7 @@ public class MainModule extends AbstractModule {
         Twitter twitter = new TwitterFactory().getInstance();
 
         String environment = System.getProperty("com.google.appengine.runtime.environment");
+        LOG.fine("Environment: " + environment);
         if (environment.equals("Production")) {
             twitter.setOAuthConsumer("hbJyP47vK13RdJunrso0g", "4fOLcwABIZI6dvKUhsAbANesaC0wnimQUDkVXDMYM");
         } else {
