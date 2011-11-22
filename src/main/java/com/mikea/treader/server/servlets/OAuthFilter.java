@@ -1,6 +1,7 @@
 package com.mikea.treader.server.servlets;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -20,10 +21,10 @@ import java.io.IOException;
 
 @Singleton
 public class OAuthFilter implements javax.servlet.Filter {
-    private final Twitter twitter;
+    private final Provider<Twitter> twitter;
 
     @Inject
-    public OAuthFilter(Twitter twitter) {
+    public OAuthFilter(Provider<Twitter> twitter) {
         this.twitter = twitter;
     }
 
@@ -47,18 +48,21 @@ public class OAuthFilter implements javax.servlet.Filter {
         Object accessToken = request.getSession().getAttribute("accessToken");
         if (accessToken == null) {
             Cookie[] cookies = request.getCookies();
-            for (Cookie cookie : cookies) {
-                String name = cookie.getName();
-                if (name.equals("twitter_user_id")) {
-                    Long user_id = Long.parseLong(cookie.getValue());
-                    Objectify ofy = ObjectifyService.begin();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    String name = cookie.getName();
+                    if (name.equals("twitter_user_id")) {
+                        Long user_id = Long.parseLong(cookie.getValue());
+                        Objectify ofy = ObjectifyService.begin();
 
-                    User user = ofy.get(User.class, user_id);
-                    if (user != null) {
-                        AccessToken token = new AccessToken(user.token, user.tokenSecret);
-                        request.getSession().setAttribute("accessToken", token);
-                        filterChain.doFilter(servletRequest, servletResponse);
-                        return;
+                        User user = ofy.find(User.class, user_id);
+                        if (user != null) {
+                            AccessToken token = new AccessToken(user.token, user.tokenSecret);
+                            request.getSession().setAttribute("accessToken", token);
+                            twitter.get().setOAuthAccessToken(token);
+                            filterChain.doFilter(servletRequest, servletResponse);
+                            return;
+                        }
                     }
                 }
             }

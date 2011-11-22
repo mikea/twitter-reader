@@ -3,6 +3,7 @@ package com.mikea.treader.server;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.servlet.RequestScoped;
 import com.googlecode.objectify.ObjectifyService;
 import com.mikea.treader.model.User;
 import twitter4j.Twitter;
@@ -17,7 +18,7 @@ public class MainModule extends AbstractModule {
     }
 
     @Provides
-    @Singleton
+    @RequestScoped
     Twitter getTwitter() {
         Twitter twitter = new TwitterFactory().getInstance();
 

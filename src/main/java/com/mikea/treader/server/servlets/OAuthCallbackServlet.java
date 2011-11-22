@@ -1,6 +1,7 @@
 package com.mikea.treader.server.servlets;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -21,10 +22,10 @@ import java.io.IOException;
 
 @Singleton
 public class OAuthCallbackServlet extends HttpServlet {
-    private final Twitter twitter;
+    private final Provider<Twitter> twitter;
 
     @Inject
-    public OAuthCallbackServlet(Twitter twitter) {
+    public OAuthCallbackServlet(Provider<Twitter> twitter) {
         this.twitter = twitter;
     }
 
@@ -33,7 +34,7 @@ public class OAuthCallbackServlet extends HttpServlet {
         RequestToken requestToken = (RequestToken) req.getSession().getAttribute("requestToken");
         String verifier = req.getParameter("oauth_verifier");
         try {
-            AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+            AccessToken accessToken = twitter.get().getOAuthAccessToken(requestToken, verifier);
             req.getSession().removeAttribute("requestToken");
             req.getSession().setAttribute("accessToken", accessToken);
             

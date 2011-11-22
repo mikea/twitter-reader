@@ -1,5 +1,6 @@
 package com.mikea.treader.server;
 
+import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.ServletModule;
 import com.mikea.treader.server.servlets.OAuthFilter;
 import com.mikea.treader.server.servlets.OAuthLoginServlet;

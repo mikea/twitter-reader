@@ -1,6 +1,7 @@
 package com.mikea.treader.server.servlets;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -15,17 +16,17 @@ import java.io.IOException;
 
 @Singleton
 public class OAuthLoginServlet extends HttpServlet {
-    private final Twitter twitter;
+    private final Provider<Twitter> twitter;
 
     @Inject
-    public OAuthLoginServlet(Twitter twitter) {
+    public OAuthLoginServlet(Provider<Twitter> twitter) {
         this.twitter = twitter;
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            RequestToken requestToken = twitter.getOAuthRequestToken();
+            RequestToken requestToken = twitter.get().getOAuthRequestToken();
 
             req.getSession().setAttribute("requestToken", requestToken);
             String authorizationURL = requestToken.getAuthorizationURL();
